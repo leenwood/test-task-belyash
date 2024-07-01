@@ -1,0 +1,57 @@
+services:
+  php-fpm:
+    build:
+      context: ./docker/php
+    environment:
+      MS_PORT: ${MYSQL_PORT}
+      MS_HOST: ${MYSQL_HOST}
+      MS_PASSWORD: ${MYSQL_PASSWORD}
+      MS_USER: ${MYSQL_USER}
+      MS_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ./app:/app
+    container_name: ${PROJECT_NAME}-php-fpm
+    depends_on:
+      - mysql
+    working_dir: /app
+
+  mysql:
+    image: mysql:8.0
+    container_name: ${PROJECT_NAME}-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+
+  nginx:
+    image: nginx:1.19.4-alpine
+    command: [ nginx-debug, '-g', 'daemon off;' ]
+    environment:
+      NGINX_HOST: ${NGINX_HOST}
+      NGINX_PORT: ${NGINX_PORT}
+      NGINX_DIR_USER: /app/public
+      PHP_FPM: php-fpm
+      VIRTUAL_HOST: ${NGINX_HOST}
+    working_dir: /
+    container_name: ${PROJECT_NAME}-nginx
+    volumes:
+      - ./docker/nginx/nginx.conf.template:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites-available/:/etc/nginx/sites-available/
+      - ./docker/nginx/sites-available/:/etc/nginx/sites-enabled/
+      - ./app:/app
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    restart: always
