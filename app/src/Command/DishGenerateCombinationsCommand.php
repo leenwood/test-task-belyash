@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'app:execute',
     description: 'Вариант с рекурсивным перебором',
 )]
-class TestCommand extends Command
+class DishGenerateCombinationsCommand extends Command
 {
     public function __construct(
         private DishBuilder $builder

@@ -48,6 +48,11 @@ class DishBuilder
         return $constructor->generateCombinations();
     }
 
+    /**
+     * @param string $pattern
+     *
+     * @return array
+     */
     public function buildDishesByIterative(string $pattern): array
     {
         $ingredientCounts = array_count_values(str_split($pattern));
