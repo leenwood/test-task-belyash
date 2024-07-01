@@ -36,11 +36,9 @@ class DishBuilder
      */
     public function buildDishesByRecursive(string $pattern): array
     {
-        $ingredientCounts = array_count_values(str_split($pattern));
+        $ingredientCounts = $this->countIngrediens($pattern);
 
-        $ingredientMap = [];
-
-        $ingredientMap = $this->createIngredientsMaps($ingredientCounts, $ingredientMap);
+        $ingredientMap = $this->createIngredientsMaps($ingredientCounts);
 
         if ($this->countCombinations($ingredientMap, $ingredientCounts, $pattern) > 100) {
             throw new StackOverflowException("Для рекурсивного метода слишком много комбинаций");
@@ -57,11 +55,9 @@ class DishBuilder
      */
     public function buildDishesByIterative(string $pattern): array
     {
-        $ingredientCounts = array_count_values(str_split($pattern));
+        $ingredientCounts = $this->countIngrediens($pattern);
 
-        $ingredientMap = [];
-
-        $ingredientMap = $this->createIngredientsMaps($ingredientCounts, $ingredientMap);
+        $ingredientMap = $this->createIngredientsMaps($ingredientCounts);
 
         $constructor = new IterativeDishConstructor($ingredientMap, $pattern);
         return $constructor->generateCombinations();
@@ -116,12 +112,12 @@ class DishBuilder
 
     /**
      * @param array $ingredientCounts
-     * @param array $ingredientMap
      *
      * @return array
      */
-    public function createIngredientsMaps(array $ingredientCounts, array $ingredientMap): array
+    public function createIngredientsMaps(array $ingredientCounts): array
     {
+        $ingredientMap = [];
         foreach ($ingredientCounts as $ingredientCode => $ingredientCount) {
             $ingredients = $this->ingredientService->getIngredientsByCode($ingredientCode);
             array_walk($ingredients, function ($ingredient) use (&$ingredientMap, $ingredientCode) {
@@ -129,5 +125,15 @@ class DishBuilder
             });
         }
         return $ingredientMap;
+    }
+
+    /**
+     * @param string $pattern
+     * @return array
+     */
+    public function countIngrediens(string $pattern): array
+    {
+        $ingredientCounts = array_count_values(str_split($pattern));
+        return $ingredientCounts;
     }
 }
