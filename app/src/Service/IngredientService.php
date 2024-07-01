@@ -25,10 +25,4 @@ class IngredientService
         return $this->ingredientRepository->findBy(['type' => $type]);
     }
 
-    public function getIngredient()
-    {
-
-    }
-
-
 }
