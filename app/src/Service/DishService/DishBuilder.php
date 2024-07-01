@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\DishService;
 
 use App\Exception\StackOverflowException;
+use App\Service\IngredientService;
+use App\Service\RedisService;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

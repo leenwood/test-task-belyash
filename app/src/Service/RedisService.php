@@ -18,7 +18,7 @@ class RedisService
 
 
     /**
-     * @return RedisService
+     * @return RedisAdapter
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

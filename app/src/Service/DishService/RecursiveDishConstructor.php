@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\DishService;
 
 class RecursiveDishConstructor implements DishConstructorInterface
 {
