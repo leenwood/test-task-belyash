@@ -63,10 +63,19 @@ class DishGenerateCombinationsCommand extends Command
                 $io->error($e->getMessage());
 
                 return Command::FAILURE;
+            } catch (\Throwable $e) {
+                $io->error('Internal Server Error');
+                return Command::FAILURE;
             }
 
         } else {
-            $result = $this->builder->buildDishesByIterative($pattern);
+            try {
+                $result = $this->builder->buildDishesByIterative($pattern);
+            } catch (\Throwable $e) {
+                $io->error('Internal Server Error');
+                return Command::FAILURE;
+            }
+
         }
 
         print_r($result);
